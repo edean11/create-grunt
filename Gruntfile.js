@@ -40,10 +40,22 @@ module.exports = function(grunt) {
       options: {
         reload: true
       }
+    },
+    autoprefixer: {
+      options: {
+        //browsers: ['> 1% in US']
+      },
+      multiple_files: {
+        expand: true,
+        flatten: true,
+        src: 'public/css/*.css',
+        dest: 'public/css/'
+      }
     }
   });
 
   grunt.registerTask('default', []);
-  grunt.registerTask('build', ['clean', 'copy', 'jade', 'sass']);
+  grunt.registerTask('build', ['clean', 'copy', 'jade', 'sass', 'autoprefixer']);
+  grunt.registerTask('serve', ['build', 'watch']);
 
 };
