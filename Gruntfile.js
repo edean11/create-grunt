@@ -16,7 +16,7 @@ module.exports = function(grunt) {
     copy: {
       main:{
         files: [
-          {expand: true, cwd: 'app/', src: ['**', '!**/*.jade', '!**/*.{scss,sass}'], dest: 'public/', filter: 'isFile'}
+          {expand: true, cwd: 'app/', src: ['**', '!**/*.jade', '!**/*.{scss,sass}', '!**/*.js'], dest: 'public/', filter: 'isFile'}
         ]
       }
     },
@@ -79,7 +79,7 @@ module.exports = function(grunt) {
     usemin: {
       html: ['public/**/*.html']
     },
-    useminPrepare {
+    useminPrepare: {
       html: ['public/index.html'],
       options: {
         dest: 'public',
@@ -96,7 +96,16 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('default', []);
-  grunt.registerTask('build', ['clean', 'copy', 'jade', 'sass', 'autoprefixer', 'wiredep']);
+  grunt.registerTask('build', ['clean', 'copy', 'jade', 'sass', 'autoprefixer', 'wiredep', 'combineJs']);
   grunt.registerTask('serve', ['build', 'connect', 'watch']);
+  grunt.registerTask('combineJs', [
+    'clean:temp',
+    'wiredep',
+    'useminPrepare',
+    'concat:generated',
+    'uglify:generated',
+    'usemin',
+    'clean:temp'
+  ]);
 
 };
