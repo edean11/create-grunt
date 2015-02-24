@@ -9,7 +9,10 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt);
 
   grunt.initConfig({
-    clean: ['public'],
+    clean: {
+      temp: ['.tmp'],
+      dist: ['public']
+    },
     copy: {
       main:{
         files: [
@@ -37,13 +40,6 @@ module.exports = function(grunt) {
         }
       }
     },
-    watch: {
-      files: ['app/**/*', 'bower.json'],
-      tasks: ['build'],
-      options: {
-        reload: true
-      }
-    },
     autoprefixer: {
       options: {
         //browsers: ['> 1% in US']
@@ -59,11 +55,48 @@ module.exports = function(grunt) {
       build: {
         src: ['public/**/*.html']
       }
+    },
+    connect: {
+      options: {
+        port: 8888,
+        open: true,
+        useAvailablePort: true,
+        hostname: 'localhost'
+      },
+
+      server: {
+        options: {
+          middleware: function (connect) {
+            return [
+              connect.static('public'),
+              connect().use('/scripts', connect.static('./app/scripts')),
+              connect().use('/bower_components', connect.static('./bower_components'))
+            ];
+          }
+        }
+      }
+    },
+    usemin: {
+      html: ['public/**/*.html']
+    },
+    useminPrepare {
+      html: ['public/index.html'],
+      options: {
+        dest: 'public',
+        root: 'app'
+      }
+    },
+    watch: {
+      files: ['app/**/*', 'bower.json'],
+      tasks: ['build'],
+      options: {
+        reload: true
+      }
     }
   });
 
   grunt.registerTask('default', []);
   grunt.registerTask('build', ['clean', 'copy', 'jade', 'sass', 'autoprefixer', 'wiredep']);
-  grunt.registerTask('serve', ['build', 'watch']);
+  grunt.registerTask('serve', ['build', 'connect', 'watch']);
 
 };
