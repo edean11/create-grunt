@@ -30,8 +30,15 @@ module.exports = function(grunt) {
         },
       dist: {
         files: {
-          'public/css/main.css': 'app/css/main.scss'
+          'public/css/main.css': 'app/styles/main.scss'
         }
+      }
+    },
+    watch: {
+      files: ['app/**/*'],
+      tasks: ['build'],
+      options: {
+        reload: true
       }
     }
   });
